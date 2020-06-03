@@ -52,20 +52,24 @@ public class DealCmd extends HttpServlet {
 		}else {
 			cmd=999;
 		}
-		
 	
 		//提前定义好最后返回给客户端的消息对象，下面在switch处理cmd时存储执行case后返回的执行消息
 		MessageBean messageBean=new MessageBean();
 		
 		switch(cmd) {
 			case 1://注册
-				String username = request.getParameter("username"); // 获取客户端传过来的参数
-				String password = request.getParameter("password");
+				String usernameForRegister = request.getParameter("username"); // 获取客户端传过来的参数
+				String passwordForRegister = request.getParameter("password");
 				//调用注册函数并且返回消息对象，消息对象在switch后返回给客户端
-				RegisterUser registerUser=new RegisterUser();
-				messageBean = registerUser.registerUser02(username, password);
+				RegisterUser registerUser = new RegisterUser();
+				messageBean = registerUser.registerUser02(usernameForRegister, passwordForRegister);
 				break;
 			case 2://登录
+				String usernameForLogin = request.getParameter("username"); // 获取客户端传过来的参数
+				String passwordForLogin = request.getParameter("password");
+				//调用注册方法并且返回消息对象，消息对象在switch后返回给客户端
+				LoginUser loginUser = new LoginUser();
+				messageBean = LoginUser.LoginUser02(usernameForLogin, passwordForLogin);
 				break;
 			case 3://修改密码
 				break;
@@ -74,7 +78,9 @@ public class DealCmd extends HttpServlet {
 			case 5://获取模型
 				break;
 			case 999://提前跳出，提示cmd出现异常
-				System.out.println("cmd异常，请查询一下DealCmd类里面传进来的cmd是否有异常，cmd为空或是不能转换为数字时都会打印这条信息");
+				messageBean.setCode(-1);
+				messageBean.setMsg("cmd异常，请查询一下DealCmd类里面传进来的cmd是否有异常，cmd为空或是不能转换为数字时都会打印这条信息");;
+				//System.out.println("cmd异常，请查询一下DealCmd类里面传进来的cmd是否有异常，cmd为空或是不能转换为数字时都会打印这条信息");
 				break;
 			default://其余情况也要跳出，然后提示可能出现了错误
 				break;

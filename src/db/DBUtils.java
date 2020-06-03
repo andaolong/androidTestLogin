@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import domain.MessageBean;
+
 
 public class DBUtils {
 	private Connection conn;
@@ -44,7 +46,7 @@ public class DBUtils {
 	}
 
 
-	// 判断数据库中是否存在某个用户名及其密码,注册和登录的时候判断
+	// 判断数据库中是否存在某个用户名及其密码,注册的时候判断
 	public boolean isExistInDB(String username, String password) {
 		boolean isFlag = false; // 创建 statement对象
 		try {
@@ -68,9 +70,50 @@ public class DBUtils {
 			isFlag = false;
 		}
 		return isFlag;
-
-
 	}
+	
+	// 判断数据库中是否存在某个用户名及其密码,登录的时候判断
+	public MessageBean isRightUserInDB(String username, String password) {
+			MessageBean messageBean=new MessageBean();
+			//先创建一个返回的消息对象
+			try {
+				System.out.println("开始判断用户名密码");
+				sta = conn.createStatement(); // 执行SQL查询语句
+				rs = sta.executeQuery("select * from user");// 获得结果集
+				if (rs != null) {
+					while (rs.next()) { // 遍历结果集
+						if (rs.getString("user_name").equals(username)) {
+							 if (rs.getString("user_password").equals(password)) { 
+								 messageBean.setCode(0);
+								 messageBean.setMsg("用户名和密码均符合");
+								 messageBean.setData(null);
+								 return messageBean;
+								 //break;
+							 }else {
+								 messageBean.setCode(-1);
+								 messageBean.setMsg("用户名符合，密码错误");
+								 messageBean.setData(null);
+								 return messageBean;
+								 //break;
+							 }
+							
+						}		
+					}
+					//while都执行玩了还没有跳出，那就是数据库没有这个用户名的用户
+					messageBean.setCode(-2);
+					messageBean.setMsg("数据库没有此用户");
+					messageBean.setData(null);
+				}else {
+					//数据库直接为空，提示没有此用户同时提示数据库为空，虽然这个不太可能用到，鲁棒性
+					messageBean.setCode(-3);
+					messageBean.setMsg("数据库没有此用户，数据库为空");
+					messageBean.setData(null);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();	
+			}
+			return messageBean;
+		}
 
 
 	// 注册 将用户名和密码插入到数据库(id设置的是自增长的，因此不需要插入)
