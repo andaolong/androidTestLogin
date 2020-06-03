@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 import domain.MessageBean;
 
 
+
 /**此类负责接收处理客户端的请求，调用相关的类进行处理，然后返回信息给客户端*/
 public class DealCmd extends HttpServlet {
 
