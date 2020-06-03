@@ -72,6 +72,12 @@ public class DealCmd extends HttpServlet {
 				messageBean = LoginUser.LoginUser02(usernameForLogin, passwordForLogin);
 				break;
 			case 3://修改密码
+				String usernameForChangePassword = request.getParameter("username"); // 获取客户端传过来的参数
+				String oldPasswordForChangePassword = request.getParameter("oldPassword");
+				String newPasswordForChangePassword = request.getParameter("newPassword");
+				//调用修改密码方法并且返回消息对象，消息对象在switch后返回给客户端
+				ChangePassword changePassword = new ChangePassword();
+				messageBean = changePassword.changePassword02(usernameForChangePassword,oldPasswordForChangePassword,newPasswordForChangePassword);
 				break;
 			case 4://新建模型
 				break;
