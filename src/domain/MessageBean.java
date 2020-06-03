@@ -1,7 +1,7 @@
 package domain;
 
 /**
- * 返回给用户的对象
+ * 返回给用户的对象模板
  * @author andaolong,
  * 2020年6月2日18:36:19
  *

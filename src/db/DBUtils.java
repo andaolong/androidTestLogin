@@ -14,9 +14,9 @@ public class DBUtils {
 	private String user = "root"; // 指定连接数据库的用户名
 	private String password = "260918mine"; // 指定连接数据库的密码
 	private Statement sta;
-	private ResultSet rs; // 打开数据库连接
+	private ResultSet rs; 
 
-
+	// 打开数据库连接
 	public void openConnect() {
 		try {
 			// 加载数据库驱动

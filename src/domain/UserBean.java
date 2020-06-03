@@ -2,7 +2,7 @@ package domain;
 
 import java.io.Serializable;
 /**
- * 数据库查询封装对象
+ * 数据库查询封装对象模板
  * @author andaolong
  *
  */
