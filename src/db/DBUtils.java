@@ -265,5 +265,35 @@ public class DBUtils {
 		}
 		return isFlag;
 	}
+	
+	
+	
+	//获取模型名用
+	//通过客户端传进来的用户名获取到该名下所有的模型名称并返回
+	public MessageBean getUserModel(String userName) {
+		MessageBean messageBean = new MessageBean();
+		int modelCount=0;
+		String allModelName=":::";
+		
+		try {
+			sta = conn.createStatement();// 执行SQL查询语句
+			rs = sta.executeQuery("select model_name from model where user_name="+"'"+userName+"'"+";");// 获得结果集
+			if (rs != null) {
+				while (rs.next()) { // 遍历结果集
+					modelCount=modelCount+1;
+					allModelName=allModelName+rs.getString("model_name")+":::";
+					//以:::为分隔符将所有的model_name拼接起来
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		messageBean.setCode(modelCount);
+		messageBean.setMsg(allModelName);
+		
+				
+		
+		return messageBean;
+	}
 
 }

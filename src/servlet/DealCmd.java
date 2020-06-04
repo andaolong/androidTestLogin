@@ -94,6 +94,10 @@ public class DealCmd extends HttpServlet {
 						modelSlopeForCreateModelFloat,modelInterceptForCreateModelFloat,modelBoundaryForCreateModelFloat);
 				break;
 			case 5://获取某一用户的模型
+				String usernameForGetUserModel = request.getParameter("userName"); // 获取客户端传过来的参数
+				//调用获取模型方法并且返回消息对象，消息对象在switch后返回给客户端
+				GetUserModel getUserModel = new GetUserModel();
+				messageBean = getUserModel.getUserModel02(usernameForGetUserModel);
 				break;
 			case 6://获取某一模型的参数
 				break;
