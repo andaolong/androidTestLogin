@@ -103,18 +103,18 @@ public class DBUtils {
 	
 	
 	//注册用
-		// 注册 将用户名和密码插入到数据库(id设置的是自增长的，因此不需要插入)
-		public boolean insertDataToDB(String username, String password) {
-			String sql = " insert into user ( user_name , user_password ) values ( "   + "'" +   username + "', " + "'" + password + "' )";
-			try {
-				sta = conn.createStatement();
-				// 执行SQL查询语句
-				return sta.execute(sql);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-			return false;
+	// 注册 将用户名和密码插入到数据库(id设置的是自增长的，因此不需要插入)
+	public boolean insertDataToDB(String username, String password) {
+		String sql = " insert into user ( user_name , user_password ) values ( "   + "'" +   username + "', " + "'" + password + "' )";
+		try {
+			sta = conn.createStatement();
+			// 执行SQL查询语句
+			return sta.execute(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
+		return false;
+	}
 
 	
 	//登录用
@@ -217,6 +217,53 @@ public class DBUtils {
 		}
 
 	
+	//新建模型用
+	// 新建模型    将用户名和模型信息插入到数据库(model_id设置的是自增长的，因此不需要插入)
+	public MessageBean insertModelToDB(String userName,String modelName,
+			float modelSlope,float modelIntercept,float modelBoundary) {
+		
+		MessageBean messageBean = new MessageBean();
+		//拼装好要执行的sql
+		String sql = " insert into model (user_name,model_name,model_slope,model_intercept,model_boundary) "
+				+ " values "
+				+ "("
+				+ "'"+userName+"',"
+				+ "'"+modelName+"',"
+				+modelSlope+","+modelIntercept+","+modelBoundary
+				+ ");";
+		try {
+			sta = conn.createStatement();
+			// 执行SQL语句
+			sta.execute(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		messageBean.setCode(0);
+		messageBean.setMsg("创建模型成功");
+		return messageBean;
+	}
 	
+	
+	//新建模型判断用
+	//判断数据库的该用户名下是否已经有了同名的模型，有的话返回ture
+	public boolean modelIsExistInDB(String username,String modelName) {
+		boolean isFlag = false; // 创建 statement对象
+		try {
+			sta = conn.createStatement(); // 执行SQL查询语句
+			rs = sta.executeQuery("select * from model");// 获得结果集
+			if (rs != null) {
+				while (rs.next()) { // 遍历结果集
+					if (rs.getString("user_name").equals(username) && rs.getString("model_name").equals(modelName)) {
+						isFlag = true; 
+						break; 
+					}
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			isFlag = false;
+		}
+		return isFlag;
+	}
 
 }

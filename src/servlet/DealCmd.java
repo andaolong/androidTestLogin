@@ -58,21 +58,21 @@ public class DealCmd extends HttpServlet {
 		
 		switch(cmd) {
 			case 1://注册
-				String usernameForRegister = request.getParameter("username"); // 获取客户端传过来的参数
+				String usernameForRegister = request.getParameter("userName"); // 获取客户端传过来的参数
 				String passwordForRegister = request.getParameter("password");
 				//调用注册函数并且返回消息对象，消息对象在switch后返回给客户端
 				RegisterUser registerUser = new RegisterUser();
 				messageBean = registerUser.registerUser02(usernameForRegister, passwordForRegister);
 				break;
 			case 2://登录
-				String usernameForLogin = request.getParameter("username"); // 获取客户端传过来的参数
+				String usernameForLogin = request.getParameter("userName"); // 获取客户端传过来的参数
 				String passwordForLogin = request.getParameter("password");
 				//调用注册方法并且返回消息对象，消息对象在switch后返回给客户端
 				LoginUser loginUser = new LoginUser();
 				messageBean = LoginUser.LoginUser02(usernameForLogin, passwordForLogin);
 				break;
 			case 3://修改密码
-				String usernameForChangePassword = request.getParameter("username"); // 获取客户端传过来的参数
+				String usernameForChangePassword = request.getParameter("userName"); // 获取客户端传过来的参数
 				String oldPasswordForChangePassword = request.getParameter("oldPassword");
 				String newPasswordForChangePassword = request.getParameter("newPassword");
 				//调用修改密码方法并且返回消息对象，消息对象在switch后返回给客户端
@@ -80,8 +80,24 @@ public class DealCmd extends HttpServlet {
 				messageBean = changePassword.changePassword02(usernameForChangePassword,oldPasswordForChangePassword,newPasswordForChangePassword);
 				break;
 			case 4://新建模型
+				String usernameForCreateModel = request.getParameter("userName"); // 获取客户端传过来的参数
+				String modelNameForCreateModel = request.getParameter("modelName"); 
+				String modelSlopeForCreateModel = request.getParameter("modelSlope");
+				String modelInterceptForCreateModel = request.getParameter("modelIntercept");
+				String modelBoundaryForCreateModel = request.getParameter("modelBoundary");
+				float modelSlopeForCreateModelFloat=Float.parseFloat(modelSlopeForCreateModel);
+				float modelInterceptForCreateModelFloat=Float.parseFloat(modelInterceptForCreateModel);
+				float modelBoundaryForCreateModelFloat=Float.parseFloat(modelBoundaryForCreateModel);
+				//调用新建模型方法并且返回消息对象，消息对象在switch后返回给客户端
+				CreateModel createModel = new CreateModel();
+				messageBean = createModel.createModel02(usernameForCreateModel,modelNameForCreateModel,
+						modelSlopeForCreateModelFloat,modelInterceptForCreateModelFloat,modelBoundaryForCreateModelFloat);
 				break;
-			case 5://获取模型
+			case 5://获取某一用户的模型
+				break;
+			case 6://获取某一模型的参数
+				break;
+			case 7://删除模型
 				break;
 			case 999://提前跳出，提示cmd出现异常
 				messageBean.setCode(-1);
