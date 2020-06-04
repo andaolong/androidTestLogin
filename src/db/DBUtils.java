@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import domain.MessageBean;
+import domain.ModelBean;
 import domain.UserBean;
 
 
@@ -290,8 +291,47 @@ public class DBUtils {
 		} 
 		messageBean.setCode(modelCount);
 		messageBean.setMsg(allModelName);
-		
 				
+		return messageBean;
+	}
+	
+	
+	//获取模型名用
+	//通过客户端传进来的用户名获取到该名下所有的模型名称并返回
+	public MessageBean getModelDetailInDB(String userName,String modelName) {
+		MessageBean messageBean = new MessageBean();
+		ModelBean modelBean = new ModelBean();
+		
+		try {
+			sta = conn.createStatement();// 执行SQL查询语句
+			rs = sta.executeQuery("select * from model where user_name="+"'"+userName+"'"+" and "+"model_name="+"'"+modelName+"'"+";");// 获得结果集
+			//rs=sta.executeQuery("select * from model where model_name='model01' and user_name='aa';");
+			if (rs != null) {
+				while (rs.next()) {
+					if (rs.getString("user_name").equals(userName)&&rs.getString("model_name").equals(modelName)){ 
+						modelBean.setModelId(Integer.parseInt((rs.getString("model_Id"))));
+						modelBean.setUsername(rs.getString("user_name"));
+						modelBean.setModelName(rs.getString("model_name"));
+						modelBean.setModelName("11111");
+						modelBean.setModelSlope(Float.parseFloat(rs.getString("model_slope")));
+						modelBean.setModelIntercept((Float.parseFloat(rs.getString("model_intercept"))));
+						modelBean.setModelBoundary(Float.parseFloat(rs.getString("model_boundary")));
+						
+						messageBean.setCode(0);
+						messageBean.setMsg("读取模型详细信息成功");
+						messageBean.setData(modelBean);	
+						return messageBean;
+					}
+				}		
+				
+			}else {
+				messageBean.setCode(0);
+				messageBean.setMsg("数据库中没有对应的模型");
+				messageBean.setData(modelBean);	
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
 		
 		return messageBean;
 	}

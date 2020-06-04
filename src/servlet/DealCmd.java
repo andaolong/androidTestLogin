@@ -100,7 +100,13 @@ public class DealCmd extends HttpServlet {
 				messageBean = getUserModel.getUserModel02(usernameForGetUserModel);
 				break;
 			case 6://获取某一模型的参数
+				String userNameForGetModelDetail = request.getParameter("userName"); // 获取客户端传过来的参数
+				String modelNameForGetModelDetail = request.getParameter("modelName"); // 获取客户端传过来的参数
+				//调用获取模型方法并且返回消息对象，消息对象在switch后返回给客户端
+				GetModelDetail getModelDetail = new GetModelDetail();
+				messageBean = getModelDetail.getModelDetail02(userNameForGetModelDetail,modelNameForGetModelDetail);
 				break;
+
 			case 7://删除模型
 				break;
 			case 999://提前跳出，提示cmd出现异常

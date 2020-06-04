@@ -62,6 +62,15 @@ public class ModelBean {
 	public void setModelIntercept(float modelIntercept) {
 		this.modelIntercept = modelIntercept;
 	}
+	
+	public float getModelBoundary() {
+		return modelBoundary;
+	}
+
+
+	public void setModelBoundary(float modelBoundary) {
+		this.modelBoundary = modelBoundary;
+	}
 
 }
 
