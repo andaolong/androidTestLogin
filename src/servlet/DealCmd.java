@@ -40,8 +40,10 @@ public class DealCmd extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-
-		response.setContentType("text/html;charset=utf-8");
+		//设置这两句，可以避免http请求中的中文出现乱码
+		//https://blog.csdn.net/Hitmi_/article/details/96764275
+		request.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
 		
 		//获取客户端传过来的参数cmd
 		String cmdStr = request.getParameter("cmd");
@@ -60,6 +62,12 @@ public class DealCmd extends HttpServlet {
 			case 1://注册
 				String usernameForRegister = request.getParameter("userName"); // 获取客户端传过来的参数
 				String passwordForRegister = request.getParameter("password");
+				
+				//接收中文password以后解码
+				//passwordForRegister=java.net.URLDecoder.decode(passwordForRegister,"UTF-8");
+				//java.net.URLDncoder.decode("xxxx",“utf-8")
+				System.out.println(passwordForRegister+"===");
+				
 				//调用注册函数并且返回消息对象，消息对象在switch后返回给客户端
 				RegisterUser registerUser = new RegisterUser();
 				messageBean = registerUser.registerUser02(usernameForRegister, passwordForRegister);

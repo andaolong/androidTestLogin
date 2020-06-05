@@ -14,7 +14,9 @@ import domain.UserBean;
 
 public class DBUtils {
 	private Connection conn;
-	private String url = "jdbc:mysql://127.0.0.1:3306/androidtestlogin?serverTimezone=UTC"; // 指定连接数据库的URL
+	//private String url = "jdbc:mysql://127.0.0.1:3306/androidtestlogin?serverTimezone=UTC"; // 指定连接数据库的URL
+	//为了解决中文存储到mysql中出现乱码的问题，在后面设置字符编码为utf-8
+	private String url = "jdbc:mysql://127.0.0.1:3306/androidtestlogin?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8"; // 指定连接数据库的URL
 	private String user = "root"; // 指定连接数据库的用户名
 	private String password = "260918mine"; // 指定连接数据库的密码
 	private Statement sta;
@@ -109,7 +111,8 @@ public class DBUtils {
 		String sql = " insert into user ( user_name , user_password ) values ( "   + "'" +   username + "', " + "'" + password + "' )";
 		try {
 			sta = conn.createStatement();
-			// 执行SQL查询语句
+			// 执行SQL语句
+			System.out.println(password+"=");
 			return sta.execute(sql);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -305,33 +308,49 @@ public class DBUtils {
 		try {
 			sta = conn.createStatement();// 执行SQL查询语句
 			rs = sta.executeQuery("select * from model where user_name="+"'"+userName+"'"+" and "+"model_name="+"'"+modelName+"'"+";");// 获得结果集
-			//rs=sta.executeQuery("select * from model where model_name='model01' and user_name='aa';");
+			System.out.println("select * from model where user_name="+"'"+userName+"'"+" and "+"model_name="+"'"+modelName+"'"+";");
 			if (rs != null) {
-				while (rs.next()) {
-					if (rs.getString("user_name").equals(userName)&&rs.getString("model_name").equals(modelName)){ 
-						modelBean.setModelId(Integer.parseInt((rs.getString("model_Id"))));
-						modelBean.setUsername(rs.getString("user_name"));
-						modelBean.setModelName(rs.getString("model_name"));
-						modelBean.setModelName("11111");
-						modelBean.setModelSlope(Float.parseFloat(rs.getString("model_slope")));
-						modelBean.setModelIntercept((Float.parseFloat(rs.getString("model_intercept"))));
-						modelBean.setModelBoundary(Float.parseFloat(rs.getString("model_boundary")));
-						
-						messageBean.setCode(0);
-						messageBean.setMsg("读取模型详细信息成功");
-						messageBean.setData(modelBean);	
-						return messageBean;
-					}
-				}		
-				
+				 System.out.println("rs不是null");
+				 while (rs.next()) {
+					  System.out.println("进入到了rs的遍历内");
+					  //if(rs.getString("user_name").equals(userName)&&rs.getString("model_name").equals(modelName)){
+					  if(true){
+						  modelBean.setModelId(Integer.parseInt((rs.getString("model_Id"))));
+						  modelBean.setUsername(rs.getString("user_name"));
+						  modelBean.setModelName(rs.getString("model_name"));
+						  modelBean.setModelSlope(Float.parseFloat(rs.getString("model_slope")));
+						  modelBean.setModelIntercept((Float.parseFloat(rs.getString("model_intercept"))));
+						  modelBean.setModelBoundary(Float.parseFloat(rs.getString("model_boundary")));
+				  
+						  messageBean.setCode(0); messageBean.setMsg("读取模型详细信息成功");
+						  System.out.println("model的数据被获取到了");
+						  messageBean.setData(modelBean); 
+						  return messageBean; 
+					 }
+				}
+				 
 			}else {
-				messageBean.setCode(0);
-				messageBean.setMsg("数据库中没有对应的模型");
-				messageBean.setData(modelBean);	
+				  System.out.println("rs是null");
+				  messageBean.setCode(0); 
+				  messageBean.setMsg("数据库中没有对应的模型");
+				  messageBean.setData(modelBean); 
+				  return messageBean; 
 			}
+			  System.out.println("rs成功走完了");
+			  messageBean.setCode(0); 
+			  messageBean.setMsg("在if里面出来");
+			  messageBean.setData(modelBean); 
+			  return messageBean;
+			 
 		} catch (SQLException e) {
+			System.out.println("数据库出错直接跳出catch");
 			e.printStackTrace();
 		} 
+		
+		System.out.println("trycatch走完了");
+		messageBean.setCode(0);
+		messageBean.setMsg("未知错误");
+		messageBean.setData(modelBean);	
 		
 		return messageBean;
 	}
