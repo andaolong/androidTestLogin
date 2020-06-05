@@ -310,9 +310,9 @@ public class DBUtils {
 			rs = sta.executeQuery("select * from model where user_name="+"'"+userName+"'"+" and "+"model_name="+"'"+modelName+"'"+";");// 获得结果集
 			System.out.println("select * from model where user_name="+"'"+userName+"'"+" and "+"model_name="+"'"+modelName+"'"+";");
 			if (rs != null) {
-				 System.out.println("rs不是null");
+				 //System.out.println("rs不是null");
 				 while (rs.next()) {
-					  System.out.println("进入到了rs的遍历内");
+					  //System.out.println("进入到了rs的遍历内");
 					  //if(rs.getString("user_name").equals(userName)&&rs.getString("model_name").equals(modelName)){
 					  if(true){
 						  modelBean.setModelId(Integer.parseInt((rs.getString("model_Id"))));
@@ -336,7 +336,7 @@ public class DBUtils {
 				  messageBean.setData(modelBean); 
 				  return messageBean; 
 			}
-			  System.out.println("rs成功走完了");
+			  //System.out.println("rs成功走完了");
 			  messageBean.setCode(0); 
 			  messageBean.setMsg("在if里面出来");
 			  messageBean.setData(modelBean); 
@@ -347,7 +347,7 @@ public class DBUtils {
 			e.printStackTrace();
 		} 
 		
-		System.out.println("trycatch走完了");
+		//System.out.println("trycatch走完了");
 		messageBean.setCode(0);
 		messageBean.setMsg("未知错误");
 		messageBean.setData(modelBean);	
@@ -355,4 +355,43 @@ public class DBUtils {
 		return messageBean;
 	}
 
+	
+	
+	
+	//删除模型用
+	//删除模型   验证用户名，密码，模型名后删除对应模型
+	public MessageBean deleteModelInDB(String userName,String password,String modelName) {
+		
+		MessageBean messageBean = new MessageBean();
+		
+		if(isRightUserInDB(userName,password).getCode()!=0) {
+			messageBean.setCode(-1);
+			messageBean.setMsg("用户名或密码错误");
+			return messageBean;
+		}else {
+			//只有modelName存在于数据库的userName名下才进行模型删除
+			if(modelIsExistInDB(userName,modelName)) {
+				//拼装好要执行的sql
+				String sql = " delete from model where "
+						+ "user_name="+"'"+userName+"'"
+						+" and "
+						+"model_name="+"'"+modelName+"'"
+						+ ";";
+				try {
+					sta = conn.createStatement();
+					// 执行SQL语句
+					sta.execute(sql);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				messageBean.setCode(0);
+				messageBean.setMsg("'"+userName+"'名下的'"+modelName+"'模型删除成功");
+				return messageBean;
+			}else {
+				messageBean.setCode(-1);
+				messageBean.setMsg("该用户名下没有此模型，请检查用户名或模型名");
+				return messageBean;
+			}
+		}
+	}
 }

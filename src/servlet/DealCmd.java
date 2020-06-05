@@ -116,6 +116,12 @@ public class DealCmd extends HttpServlet {
 				break;
 
 			case 7://删除模型
+				String userNameForDeleteModel = request.getParameter("userName"); // 获取客户端传过来的参数
+				String passwordForDeleteModel = request.getParameter("password"); // 获取客户端传过来的参数
+				String modelNameForDeleteModel = request.getParameter("modelName"); // 获取客户端传过来的参数
+				//调用删除模型方法并且返回消息对象，消息对象在switch后返回给客户端
+				DeleteModel deleteModel = new DeleteModel();
+				messageBean = deleteModel.deleteModel02(userNameForDeleteModel,passwordForDeleteModel,modelNameForDeleteModel);
 				break;
 			case 999://提前跳出，提示cmd出现异常
 				messageBean.setCode(-1);
