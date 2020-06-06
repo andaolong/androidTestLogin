@@ -18,7 +18,8 @@ public class GetModelDetail {
 		//处理部分在数据库isRightUserInDB()方法里面，直接把该方法返回的messageBean作为返回参数传给DealCmd即可
 		messageBean=dbUtils.getModelDetailInDB(userName,modelName);	
 		
-		dbUtils.closeConnect(); // 关闭数据库连接
+		// 关闭数据库连接
+		dbUtils.closeConnect(); 
 		
 		return messageBean;
 	}

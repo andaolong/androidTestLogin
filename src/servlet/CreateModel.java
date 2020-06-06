@@ -31,7 +31,6 @@ public class CreateModel {
 		
 		
 		
-		
 		// 请求数据库
 		DBUtils dbUtils = new DBUtils();
 		// 打开数据库连接
@@ -53,7 +52,8 @@ public class CreateModel {
 		}
 		
 		
-		dbUtils.closeConnect(); // 关闭数据库连接
+		// 关闭数据库连接
+		dbUtils.closeConnect(); 
 		
 		return messageBean;
 	}

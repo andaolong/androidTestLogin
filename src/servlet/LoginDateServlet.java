@@ -20,7 +20,11 @@ import domain.UserBean;
 
 public class LoginDateServlet extends HttpServlet {
 
-
+	/**
+	 * 2020年6月6日07:20:13
+	 * 这个类是刚开始学习的时候参照别人的教程写的
+	 * 这个类在实际工程中不起实际作用
+	 * 可以给刚学习的小伙伴一点启发，我的其他的类都是参照着这个写的*/
 	
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
@@ -96,7 +100,8 @@ public class LoginDateServlet extends HttpServlet {
 		} finally {
 			response.getWriter().close(); // 关闭这个流，不然会发生错误的
 		}
-		dbUtils.closeConnect(); // 关闭数据库连接
+		// 关闭数据库连接
+		dbUtils.closeConnect(); 
 	}
 	
 

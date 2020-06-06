@@ -227,6 +227,7 @@ public class DBUtils {
 			float modelSlope,float modelIntercept,float modelBoundary) {
 		
 		MessageBean messageBean = new MessageBean();
+		ModelBean modelBean = new ModelBean();
 		//拼装好要执行的sql
 		String sql = " insert into model (user_name,model_name,model_slope,model_intercept,model_boundary) "
 				+ " values "
@@ -239,11 +240,17 @@ public class DBUtils {
 			sta = conn.createStatement();
 			// 执行SQL语句
 			sta.execute(sql);
+			// 回显注册的模型信息
+			modelBean.setModelName(modelName);
+			modelBean.setModelSlope(modelSlope);
+			modelBean.setModelIntercept(modelIntercept);
+			modelBean.setModelBoundary(modelBoundary);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		messageBean.setCode(0);
 		messageBean.setMsg("创建模型成功");
+		messageBean.setData(modelBean);
 		return messageBean;
 	}
 	
@@ -277,7 +284,7 @@ public class DBUtils {
 	public MessageBean getUserModel(String userName) {
 		MessageBean messageBean = new MessageBean();
 		int modelCount=0;
-		String allModelName=":::";
+		String allModelName="::::";
 		
 		try {
 			sta = conn.createStatement();// 执行SQL查询语句
@@ -285,22 +292,23 @@ public class DBUtils {
 			if (rs != null) {
 				while (rs.next()) { // 遍历结果集
 					modelCount=modelCount+1;
-					allModelName=allModelName+rs.getString("model_name")+":::";
-					//以:::为分隔符将所有的model_name拼接起来
+					allModelName=allModelName+rs.getString("model_name")+"::::";
+					//以::::为分隔符将所有的model_name拼接起来
 				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} 
-		messageBean.setCode(modelCount);
-		messageBean.setMsg(allModelName);
+		messageBean.setCode(0);
+		messageBean.setMsg(userName+"名下的模型一共有"+modelCount+"个::  "
+				+ "::::::获取到的"+userName+"名下的所有模型名字如下::::::"+allModelName);
 				
 		return messageBean;
 	}
 	
 	
-	//获取模型名用
-	//通过客户端传进来的用户名获取到该名下所有的模型名称并返回
+	//获取模型详细信息用
+	//通过客户端传进来的用户名和模型名获取到该模型的详细信息
 	public MessageBean getModelDetailInDB(String userName,String modelName) {
 		MessageBean messageBean = new MessageBean();
 		ModelBean modelBean = new ModelBean();
@@ -312,9 +320,9 @@ public class DBUtils {
 			if (rs != null) {
 				 //System.out.println("rs不是null");
 				 while (rs.next()) {
-					  //System.out.println("进入到了rs的遍历内");
-					  //if(rs.getString("user_name").equals(userName)&&rs.getString("model_name").equals(modelName)){
-					  if(true){
+					  System.out.println("进入到了rs的遍历内");
+					  if(rs.getString("user_name").equals(userName)&&rs.getString("model_name").equals(modelName)){
+					  //if(true){
 						  modelBean.setModelId(Integer.parseInt((rs.getString("model_Id"))));
 						  modelBean.setUsername(rs.getString("user_name"));
 						  modelBean.setModelName(rs.getString("model_name"));
@@ -322,15 +330,18 @@ public class DBUtils {
 						  modelBean.setModelIntercept((Float.parseFloat(rs.getString("model_intercept"))));
 						  modelBean.setModelBoundary(Float.parseFloat(rs.getString("model_boundary")));
 				  
-						  messageBean.setCode(0); messageBean.setMsg("读取模型详细信息成功");
-						  System.out.println("model的数据被获取到了");
+						  messageBean.setCode(0); 
+						  messageBean.setMsg("读取模型详细信息成功");
 						  messageBean.setData(modelBean); 
+						  System.out.println("model的数据被获取到了");
 						  return messageBean; 
+					 }else {
+						 System.out.println("model的数据没被获取到");
 					 }
 				}
 				 
 			}else {
-				  System.out.println("rs是null");
+				  System.out.println("查询出来的rs是null");
 				  messageBean.setCode(0); 
 				  messageBean.setMsg("数据库中没有对应的模型");
 				  messageBean.setData(modelBean); 
@@ -338,7 +349,7 @@ public class DBUtils {
 			}
 			  //System.out.println("rs成功走完了");
 			  messageBean.setCode(0); 
-			  messageBean.setMsg("在if里面出来");
+			  messageBean.setMsg("查询出的rs异常，请检查代码");
 			  messageBean.setData(modelBean); 
 			  return messageBean;
 			 
@@ -349,7 +360,7 @@ public class DBUtils {
 		
 		//System.out.println("trycatch走完了");
 		messageBean.setCode(0);
-		messageBean.setMsg("未知错误");
+		messageBean.setMsg("未知错误，请检查程序");
 		messageBean.setData(modelBean);	
 		
 		return messageBean;
@@ -364,12 +375,13 @@ public class DBUtils {
 		
 		MessageBean messageBean = new MessageBean();
 		
+		//首先验证用户名和密码是否正确
 		if(isRightUserInDB(userName,password).getCode()!=0) {
 			messageBean.setCode(-1);
 			messageBean.setMsg("用户名或密码错误");
 			return messageBean;
 		}else {
-			//只有modelName存在于数据库的userName名下才进行模型删除
+			//然后验证modelName的合法性,只有modelName存在于数据库的userName名下才进行模型删除
 			if(modelIsExistInDB(userName,modelName)) {
 				//拼装好要执行的sql
 				String sql = " delete from model where "
@@ -385,7 +397,7 @@ public class DBUtils {
 					e.printStackTrace();
 				}
 				messageBean.setCode(0);
-				messageBean.setMsg("'"+userName+"'名下的'"+modelName+"'模型删除成功");
+				messageBean.setMsg(userName+"名下的"+modelName+"模型删除成功");
 				return messageBean;
 			}else {
 				messageBean.setCode(-1);
