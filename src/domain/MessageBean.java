@@ -21,7 +21,7 @@ public class MessageBean {
 	}
 
 
-	public void setCmd(int code) {
+	public void setCmd(int cmd) {
 		this.cmd = cmd;
 	}
 	
