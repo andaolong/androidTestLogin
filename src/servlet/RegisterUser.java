@@ -28,7 +28,7 @@ public class RegisterUser{
 		if (username == null || username.equals("") || password == null || password.equals("")) {
 			messageBean.setCmd(cmd);
 			messageBean.setCode(-1);
-			messageBean.setMsg("用户名或密码为空");
+			messageBean.setMsg("用户名或密码为空，注册失败");
 			messageBean.setData(null);
 			
 			return messageBean;
@@ -48,13 +48,13 @@ public class RegisterUser{
 			// 判断账号是否存在，存在的话提示“账户已经存在”
 			messageBean.setCmd(cmd);
 			messageBean.setCode(-1);
-			messageBean.setMsg("该账号已存在");
+			messageBean.setMsg("该账号已存在，请换一个用户名，注册失败");
 			messageBean.setData(userBean);
 		} else if (!dbUtils.insertDataToDB(username, password)) {
 			// 从这个分支进来就表示：注册成功,--andl:本次注册的用户名还没有注册过，可以注册当前账号
 			messageBean.setCmd(cmd);
 			messageBean.setCode(0);
-			messageBean.setMsg("注册成功!");
+			messageBean.setMsg("你的账号"+username+"注册成功!");
 			System.out.println(password+"==");
 			//这里rs是从user表里面查询出的所有数据
 			ResultSet rs = dbUtils.getUser();
@@ -84,7 +84,7 @@ public class RegisterUser{
 			messageBean.setCmd(cmd);
 			messageBean.setCode(500);
 			messageBean.setData(userBean);
-			messageBean.setMsg("数据库错误");
+			messageBean.setMsg("数据库错误,注册失败");
 		}
 		
 		// 关闭数据库连接

@@ -24,7 +24,7 @@ public class CreateModel {
 			messageBean.setCmd(cmd);
 			messageBean.setCode(-1);
 			messageBean.setData(null);
-			messageBean.setMsg("用户名或者是您输入的模型信息中有空值，请检查传入的usernameForCreateModel， modelNameForCreateModel");
+			messageBean.setMsg("创建模型失败：用户名或者是您输入的模型信息中有空值，请检查传入的usernameForCreateModel， modelNameForCreateModel");
 			return messageBean;
 		}
 		
@@ -46,7 +46,7 @@ public class CreateModel {
 			messageBean.setCmd(cmd);
 			messageBean.setCode(-1);
 			messageBean.setData(messageBean);
-			messageBean.setMsg("数据库的该用户名下是否已经有了同名的模型");
+			messageBean.setMsg("创建模型失败：请检查数据库的该用户名下是否已经有了同名的模型");
 			return messageBean;
 		}else{
 			//处理部分在数据库insertModelToDB()方法里面，直接把该方法返回的messageBean作为返回参数传给DealCmd即可

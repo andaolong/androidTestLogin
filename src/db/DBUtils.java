@@ -127,7 +127,7 @@ public class DBUtils {
 			MessageBean messageBean=new MessageBean();
 			//先创建一个返回的消息对象
 			try {
-				System.out.println("开始判断用户名密码");
+				System.out.println("登录操作：开始判断用户名密码");
 				sta = conn.createStatement(); // 执行SQL查询语句
 				rs = sta.executeQuery("select * from user");// 获得结果集
 				if (rs != null) {
@@ -136,14 +136,14 @@ public class DBUtils {
 							 if (rs.getString("user_password").equals(password)) { 
 								 messageBean.setCmd(cmd);
 								 messageBean.setCode(0);
-								 messageBean.setMsg("用户名和密码均符合");
+								 messageBean.setMsg("用户名和密码均符合，登录成功");
 								 messageBean.setData(null);
 								 return messageBean;
 								 //break;
 							 }else {
 								 messageBean.setCmd(cmd);
 								 messageBean.setCode(-1);
-								 messageBean.setMsg("用户名符合，密码错误");
+								 messageBean.setMsg("用户名符合，密码错误，登录失败");
 								 messageBean.setData(null);
 								 return messageBean;
 								 //break;
@@ -154,13 +154,13 @@ public class DBUtils {
 					//while都执行玩了还没有跳出，那就是数据库没有这个用户名的用户
 					messageBean.setCmd(cmd);
 					messageBean.setCode(-2);
-					messageBean.setMsg("数据库没有此用户");
+					messageBean.setMsg("数据库没有此用户，登录失败");
 					messageBean.setData(null);
 				}else {
 					//数据库直接为空，提示没有此用户同时提示数据库为空，虽然这个不太可能用到，鲁棒性
 					messageBean.setCmd(cmd);
 					messageBean.setCode(-3);
-					messageBean.setMsg("数据库没有此用户，数据库为空");
+					messageBean.setMsg("数据库没有此用户，数据库为空，登录失败");
 					messageBean.setData(null);
 				}
 			} catch (SQLException e) {
@@ -203,7 +203,7 @@ public class DBUtils {
 							 }else {
 								 messageBean.setCmd(cmd);
 								 messageBean.setCode(-1);
-								 messageBean.setMsg("用户名符合，旧密码错误");
+								 messageBean.setMsg("用户名符合，旧密码错误，密码修改失败，请检查旧密码是否是:"+oldPassword);
 								 messageBean.setData(null);
 								 return messageBean;
 								 //break;
@@ -214,13 +214,13 @@ public class DBUtils {
 					//while都执行玩了还没有跳出，那就是数据库没有这个用户名的用户
 					messageBean.setCmd(cmd);
 					messageBean.setCode(-2);
-					messageBean.setMsg("数据库没有此用户");
+					messageBean.setMsg("数据库没有此用户,修改密码失败，请检查用户名是否输入正确");
 					messageBean.setData(null);
 				}else {
 					//数据库直接为空，提示没有此用户同时提示数据库为空，虽然这个不太可能用到，鲁棒性
 					messageBean.setCmd(cmd);
 					messageBean.setCode(-3);
-					messageBean.setMsg("数据库没有此用户，且数据库为空");
+					messageBean.setMsg("数据库没有此用户，且数据库为空,修改密码失败，请检查用户名是否输入正确");
 					messageBean.setData(null);
 				}
 			} catch (SQLException e) {
@@ -259,7 +259,7 @@ public class DBUtils {
 		}
 		messageBean.setCmd(cmd);
 		messageBean.setCode(0);
-		messageBean.setMsg("创建模型成功");
+		messageBean.setMsg("创建模型成功,模型信息为：");
 		messageBean.setData(modelBean);
 		return messageBean;
 	}
@@ -343,7 +343,7 @@ public class DBUtils {
 				  
 						  messageBean.setCmd(cmd);
 						  messageBean.setCode(0); 
-						  messageBean.setMsg("读取模型详细信息成功");
+						  messageBean.setMsg("读取模型详细信息成功,模型详细信息如下：");
 						  messageBean.setData(modelBean); 
 						  System.out.println("model的数据被获取到了");
 						  return messageBean; 
@@ -356,14 +356,14 @@ public class DBUtils {
 				  System.out.println("查询出来的rs是null");
 				  messageBean.setCmd(cmd);
 				  messageBean.setCode(0); 
-				  messageBean.setMsg("数据库中没有对应的模型");
+				  messageBean.setMsg("模型信息获取失败：数据库中没有对应的模型");
 				  messageBean.setData(modelBean); 
 				  return messageBean; 
 			}
 			  //System.out.println("rs成功走完了");
 			  messageBean.setCmd(cmd);
 			  messageBean.setCode(0); 
-			  messageBean.setMsg("查询出的rs异常，请检查代码");
+			  messageBean.setMsg("模型信息获取失败：查询出的rs异常，请检查代码");
 			  messageBean.setData(modelBean); 
 			  return messageBean;
 			 
@@ -375,7 +375,7 @@ public class DBUtils {
 		//System.out.println("trycatch走完了");
 		messageBean.setCmd(cmd);
 		messageBean.setCode(0);
-		messageBean.setMsg("未知错误，请检查程序");
+		messageBean.setMsg("模型信息获取失败：未知错误，请检查程序");
 		messageBean.setData(modelBean);	
 		
 		return messageBean;
@@ -394,7 +394,7 @@ public class DBUtils {
 		if(isRightUserInDB(cmd,userName,password).getCode()!=0) {
 			messageBean.setCmd(cmd);
 			messageBean.setCode(-1);
-			messageBean.setMsg("用户名或密码错误");
+			messageBean.setMsg("删除模型失败：用户名或密码错误，请检查输入的信息是否正确");
 			return messageBean;
 		}else {
 			//然后验证modelName的合法性,只有modelName存在于数据库的userName名下才进行模型删除
@@ -419,7 +419,7 @@ public class DBUtils {
 			}else {
 				messageBean.setCmd(cmd);
 				messageBean.setCode(-1);
-				messageBean.setMsg("该用户名下没有此模型，请检查用户名或模型名");
+				messageBean.setMsg("模型删除失败：该用户名下没有此模型，请检查用户名或模型名");
 				return messageBean;
 			}
 		}
