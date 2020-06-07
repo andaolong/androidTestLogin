@@ -125,6 +125,7 @@ public class DBUtils {
 	// 判断用户输入的用户名和密码是否正确,登录的时候判断
 	public MessageBean isRightUserInDB(int cmd , String username, String password) {
 			MessageBean messageBean=new MessageBean();
+			UserBean userBean = new UserBean();
 			//先创建一个返回的消息对象
 			try {
 				System.out.println("登录操作：开始判断用户名密码");
@@ -137,7 +138,9 @@ public class DBUtils {
 								 messageBean.setCmd(cmd);
 								 messageBean.setCode(0);
 								 messageBean.setMsg("用户名和密码均符合，登录成功");
-								 messageBean.setData(null);
+								 userBean.setUsername(username);
+								 userBean.setPassword(password);
+								 messageBean.setData(userBean);
 								 return messageBean;
 								 //break;
 							 }else {
@@ -389,7 +392,7 @@ public class DBUtils {
 	public MessageBean deleteModelInDB(int cmd , String userName,String password,String modelName) {
 		
 		MessageBean messageBean = new MessageBean();
-		
+		ModelBean modelBean = new ModelBean();
 		//首先验证用户名和密码是否正确
 		if(isRightUserInDB(cmd,userName,password).getCode()!=0) {
 			messageBean.setCmd(cmd);
@@ -415,6 +418,8 @@ public class DBUtils {
 				messageBean.setCmd(cmd);
 				messageBean.setCode(0);
 				messageBean.setMsg(userName+"名下的"+modelName+"模型删除成功");
+				modelBean.setModelName(modelName);
+				messageBean.setData(modelBean);
 				return messageBean;
 			}else {
 				messageBean.setCmd(cmd);
