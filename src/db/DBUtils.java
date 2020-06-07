@@ -17,7 +17,7 @@ public class DBUtils {
 	//private String url = "jdbc:mysql://127.0.0.1:3306/androidtestlogin?serverTimezone=UTC"; // 指定连接数据库的URL
 	//为了解决中文存储到mysql中出现乱码的问题，在后面设置字符编码为utf-8
 	private String url = "jdbc:mysql://127.0.0.1:3306/androidtestlogin?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8"; // 指定连接数据库的URL
-	private String user = "root"; // 指定连接数据库的用户名
+	private String user = "root"; // 指定连接数据库的用户名,这里数据库的用户名和密码根据实际情况进行更改
 	private String password = "260918mine"; // 指定连接数据库的密码
 	private Statement sta;
 	private ResultSet rs; 
