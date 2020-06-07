@@ -17,7 +17,7 @@ public class DBUtils {
 	//private String url = "jdbc:mysql://127.0.0.1:3306/androidtestlogin?serverTimezone=UTC"; // 指定连接数据库的URL
 	//为了解决中文存储到mysql中出现乱码的问题，在后面设置字符编码为utf-8
 	private String url = "jdbc:mysql://127.0.0.1:3306/androidtestlogin?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8"; // 指定连接数据库的URL
-	private String user = "root"; // 指定连接数据库的用户名,这里数据库的用户名和密码根据实际情况进行更改
+	private String user = "andaolong"; // 指定连接数据库的用户名,这里数据库的用户名和密码根据实际情况进行更改
 	private String password = "260918mine"; // 指定连接数据库的密码
 	private Statement sta;
 	private ResultSet rs; 
@@ -123,7 +123,7 @@ public class DBUtils {
 	
 	//登录用
 	// 判断用户输入的用户名和密码是否正确,登录的时候判断
-	public MessageBean isRightUserInDB(String username, String password) {
+	public MessageBean isRightUserInDB(int cmd , String username, String password) {
 			MessageBean messageBean=new MessageBean();
 			//先创建一个返回的消息对象
 			try {
@@ -134,12 +134,14 @@ public class DBUtils {
 					while (rs.next()) { // 遍历结果集
 						if (rs.getString("user_name").equals(username)) {
 							 if (rs.getString("user_password").equals(password)) { 
+								 messageBean.setCmd(cmd);
 								 messageBean.setCode(0);
 								 messageBean.setMsg("用户名和密码均符合");
 								 messageBean.setData(null);
 								 return messageBean;
 								 //break;
 							 }else {
+								 messageBean.setCmd(cmd);
 								 messageBean.setCode(-1);
 								 messageBean.setMsg("用户名符合，密码错误");
 								 messageBean.setData(null);
@@ -150,11 +152,13 @@ public class DBUtils {
 						}		
 					}
 					//while都执行玩了还没有跳出，那就是数据库没有这个用户名的用户
+					messageBean.setCmd(cmd);
 					messageBean.setCode(-2);
 					messageBean.setMsg("数据库没有此用户");
 					messageBean.setData(null);
 				}else {
 					//数据库直接为空，提示没有此用户同时提示数据库为空，虽然这个不太可能用到，鲁棒性
+					messageBean.setCmd(cmd);
 					messageBean.setCode(-3);
 					messageBean.setMsg("数据库没有此用户，数据库为空");
 					messageBean.setData(null);
@@ -170,7 +174,7 @@ public class DBUtils {
 	
 	//修改密码
 	//在数据库中修改密码
-	public MessageBean  changePasswordInDB(String username, String oldPassword, String newPassword ) {
+	public MessageBean  changePasswordInDB(int cmd , String username, String oldPassword, String newPassword ) {
 			MessageBean messageBean=new MessageBean();
 			//先创建一个返回的消息对象
 			try {
@@ -185,16 +189,19 @@ public class DBUtils {
 								 sta02.execute("Update user set user_password='"+newPassword+"' where user_name='"+username+ "';");// 获得结果集
 									 								 
 								 //新建一个userBean存储修改后的信息返回给客户端
+								 messageBean.setCmd(cmd);
 								 UserBean userBean = new UserBean();
 								 userBean.setUsername(username);
 								 userBean.setPassword(newPassword);
-							
+								 
+								 messageBean.setCmd(cmd);
 								 messageBean.setCode(0);
 								 messageBean.setMsg("密码修改成功,修改后的用户信息为：");
 								 messageBean.setData(userBean);
 								 return messageBean;
 								 //break;
 							 }else {
+								 messageBean.setCmd(cmd);
 								 messageBean.setCode(-1);
 								 messageBean.setMsg("用户名符合，旧密码错误");
 								 messageBean.setData(null);
@@ -205,11 +212,13 @@ public class DBUtils {
 						}		
 					}
 					//while都执行玩了还没有跳出，那就是数据库没有这个用户名的用户
+					messageBean.setCmd(cmd);
 					messageBean.setCode(-2);
 					messageBean.setMsg("数据库没有此用户");
 					messageBean.setData(null);
 				}else {
 					//数据库直接为空，提示没有此用户同时提示数据库为空，虽然这个不太可能用到，鲁棒性
+					messageBean.setCmd(cmd);
 					messageBean.setCode(-3);
 					messageBean.setMsg("数据库没有此用户，且数据库为空");
 					messageBean.setData(null);
@@ -223,7 +232,7 @@ public class DBUtils {
 	
 	//新建模型用
 	// 新建模型    将用户名和模型信息插入到数据库(model_id设置的是自增长的，因此不需要插入)
-	public MessageBean insertModelToDB(String userName,String modelName,
+	public MessageBean insertModelToDB( int cmd , String userName,String modelName,
 			float modelSlope,float modelIntercept,float modelBoundary) {
 		
 		MessageBean messageBean = new MessageBean();
@@ -248,6 +257,7 @@ public class DBUtils {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		messageBean.setCmd(cmd);
 		messageBean.setCode(0);
 		messageBean.setMsg("创建模型成功");
 		messageBean.setData(modelBean);
@@ -281,7 +291,7 @@ public class DBUtils {
 	
 	//获取模型名用
 	//通过客户端传进来的用户名获取到该名下所有的模型名称并返回
-	public MessageBean getUserModel(String userName) {
+	public MessageBean getUserModel(int cmd , String userName) {
 		MessageBean messageBean = new MessageBean();
 		int modelCount=0;
 		String allModelName="::::";
@@ -299,6 +309,7 @@ public class DBUtils {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} 
+		messageBean.setCmd(cmd);
 		messageBean.setCode(0);
 		messageBean.setMsg(userName+"名下的模型一共有"+modelCount+"个::  "
 				+ "::::::获取到的"+userName+"名下的所有模型名字如下::::::"+allModelName);
@@ -309,7 +320,7 @@ public class DBUtils {
 	
 	//获取模型详细信息用
 	//通过客户端传进来的用户名和模型名获取到该模型的详细信息
-	public MessageBean getModelDetailInDB(String userName,String modelName) {
+	public MessageBean getModelDetailInDB(int cmd , String userName,String modelName) {
 		MessageBean messageBean = new MessageBean();
 		ModelBean modelBean = new ModelBean();
 		
@@ -330,6 +341,7 @@ public class DBUtils {
 						  modelBean.setModelIntercept((Float.parseFloat(rs.getString("model_intercept"))));
 						  modelBean.setModelBoundary(Float.parseFloat(rs.getString("model_boundary")));
 				  
+						  messageBean.setCmd(cmd);
 						  messageBean.setCode(0); 
 						  messageBean.setMsg("读取模型详细信息成功");
 						  messageBean.setData(modelBean); 
@@ -342,12 +354,14 @@ public class DBUtils {
 				 
 			}else {
 				  System.out.println("查询出来的rs是null");
+				  messageBean.setCmd(cmd);
 				  messageBean.setCode(0); 
 				  messageBean.setMsg("数据库中没有对应的模型");
 				  messageBean.setData(modelBean); 
 				  return messageBean; 
 			}
 			  //System.out.println("rs成功走完了");
+			  messageBean.setCmd(cmd);
 			  messageBean.setCode(0); 
 			  messageBean.setMsg("查询出的rs异常，请检查代码");
 			  messageBean.setData(modelBean); 
@@ -359,6 +373,7 @@ public class DBUtils {
 		} 
 		
 		//System.out.println("trycatch走完了");
+		messageBean.setCmd(cmd);
 		messageBean.setCode(0);
 		messageBean.setMsg("未知错误，请检查程序");
 		messageBean.setData(modelBean);	
@@ -371,12 +386,13 @@ public class DBUtils {
 	
 	//删除模型用
 	//删除模型   验证用户名，密码，模型名后删除对应模型
-	public MessageBean deleteModelInDB(String userName,String password,String modelName) {
+	public MessageBean deleteModelInDB(int cmd , String userName,String password,String modelName) {
 		
 		MessageBean messageBean = new MessageBean();
 		
 		//首先验证用户名和密码是否正确
-		if(isRightUserInDB(userName,password).getCode()!=0) {
+		if(isRightUserInDB(cmd,userName,password).getCode()!=0) {
+			messageBean.setCmd(cmd);
 			messageBean.setCode(-1);
 			messageBean.setMsg("用户名或密码错误");
 			return messageBean;
@@ -396,10 +412,12 @@ public class DBUtils {
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
+				messageBean.setCmd(cmd);
 				messageBean.setCode(0);
 				messageBean.setMsg(userName+"名下的"+modelName+"模型删除成功");
 				return messageBean;
 			}else {
+				messageBean.setCmd(cmd);
 				messageBean.setCode(-1);
 				messageBean.setMsg("该用户名下没有此模型，请检查用户名或模型名");
 				return messageBean;

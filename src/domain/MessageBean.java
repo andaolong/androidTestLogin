@@ -10,11 +10,21 @@ public class MessageBean {
 	//code在这里表示状态，code=0表示正常，code=-1表示出错
 	//msg在这里是传回去的信息，不同场景信息不同
 	//data是一个Object类型的，不同场景不同
+	private int cmd;
 	private int code;
 	private String msg;
 	private Object data;
 
 
+	public int getCmd() {
+		return cmd;
+	}
+
+
+	public void setCmd(int code) {
+		this.cmd = cmd;
+	}
+	
 	public int getCode() {
 		return code;
 	}

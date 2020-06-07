@@ -136,14 +136,14 @@ public class DealCmd extends HttpServlet {
 				//System.out.println("通过URI获取到的password为："+passwordForRegister);
 				//调用注册函数并且返回消息对象，消息对象在switch后返回给客户端
 				RegisterUser registerUser = new RegisterUser();
-				messageBean = registerUser.registerUser02(userNameForRegister, passwordForRegister);
+				messageBean = registerUser.registerUser02(cmd,userNameForRegister, passwordForRegister);
 				break;
 			case 2://登录
 				String userNameForLogin = request.getParameter("userName"); // 获取客户端传过来的参数
 				String passwordForLogin = request.getParameter("password");
 				//调用注册方法并且返回消息对象，消息对象在switch后返回给客户端
 				LoginUser loginUser = new LoginUser();
-				messageBean = LoginUser.LoginUser02(userNameForLogin, passwordForLogin);
+				messageBean = LoginUser.LoginUser02(cmd,userNameForLogin, passwordForLogin);
 				break;
 			case 3://修改密码
 				String userNameForChangePassword = request.getParameter("userName"); // 获取客户端传过来的参数
@@ -151,7 +151,7 @@ public class DealCmd extends HttpServlet {
 				String newPasswordForChangePassword = request.getParameter("newPassword");
 				//调用修改密码方法并且返回消息对象，消息对象在switch后返回给客户端
 				ChangePassword changePassword = new ChangePassword();
-				messageBean = changePassword.changePassword02(userNameForChangePassword,oldPasswordForChangePassword,newPasswordForChangePassword);
+				messageBean = changePassword.changePassword02(cmd,userNameForChangePassword,oldPasswordForChangePassword,newPasswordForChangePassword);
 				break;
 			case 4://新建模型
 				String userNameForCreateModel = request.getParameter("userName"); // 获取客户端传过来的参数
@@ -164,21 +164,21 @@ public class DealCmd extends HttpServlet {
 				float modelBoundaryForCreateModelFloat=Float.parseFloat(modelBoundaryForCreateModel);
 				//调用新建模型方法并且返回消息对象，消息对象在switch后返回给客户端
 				CreateModel createModel = new CreateModel();
-				messageBean = createModel.createModel02(userNameForCreateModel,modelNameForCreateModel,
+				messageBean = createModel.createModel02(cmd,userNameForCreateModel,modelNameForCreateModel,
 						modelSlopeForCreateModelFloat,modelInterceptForCreateModelFloat,modelBoundaryForCreateModelFloat);
 				break;
 			case 5://获取某一用户名下的全部的模型名字
 				String userNameForGetUserModel = request.getParameter("userName"); // 获取客户端传过来的参数
 				//调用获取模型方法并且返回消息对象，消息对象在switch后返回给客户端
 				GetUserModel getUserModel = new GetUserModel();
-				messageBean = getUserModel.getUserModel02(userNameForGetUserModel);
+				messageBean = getUserModel.getUserModel02(cmd,userNameForGetUserModel);
 				break;
 			case 6://获取某一模型的详细参数
 				String userNameForGetModelDetail = request.getParameter("userName"); // 获取客户端传过来的参数
 				String modelNameForGetModelDetail = request.getParameter("modelName"); // 获取客户端传过来的参数
 				//调用获取模型方法并且返回消息对象，消息对象在switch后返回给客户端
 				GetModelDetail getModelDetail = new GetModelDetail();
-				messageBean = getModelDetail.getModelDetail02(userNameForGetModelDetail,modelNameForGetModelDetail);
+				messageBean = getModelDetail.getModelDetail02(cmd,userNameForGetModelDetail,modelNameForGetModelDetail);
 				break;
 
 			case 7://删除模型
@@ -187,7 +187,7 @@ public class DealCmd extends HttpServlet {
 				String modelNameForDeleteModel = request.getParameter("modelName"); // 获取客户端传过来的参数
 				//调用删除模型方法并且返回消息对象，消息对象在switch后返回给客户端
 				DeleteModel deleteModel = new DeleteModel();
-				messageBean = deleteModel.deleteModel02(userNameForDeleteModel,passwordForDeleteModel,modelNameForDeleteModel);
+				messageBean = deleteModel.deleteModel02(cmd,userNameForDeleteModel,passwordForDeleteModel,modelNameForDeleteModel);
 				break;
 			case 999://提前跳出，提示cmd出现异常
 				messageBean.setCode(-1);

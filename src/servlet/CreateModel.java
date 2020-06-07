@@ -10,7 +10,7 @@ import domain.UserBean;
 
 public class CreateModel {
 
-	public MessageBean createModel02(String userName,String modelName,
+	public MessageBean createModel02(int cmd , String userName,String modelName,
 			float modelSlopeForCreateModel,float modelInterceptForCreateModel,float modelBoundaryForCreateModel) {
 		
 		MessageBean messageBean = new MessageBean();
@@ -21,6 +21,7 @@ public class CreateModel {
 		if (userName == null || userName.equals("") ||
 				modelName == null || modelName.equals("")) {
 			
+			messageBean.setCmd(cmd);
 			messageBean.setCode(-1);
 			messageBean.setData(null);
 			messageBean.setMsg("用户名或者是您输入的模型信息中有空值，请检查传入的usernameForCreateModel， modelNameForCreateModel");
@@ -42,13 +43,14 @@ public class CreateModel {
 		
 		if (dbUtils.modelIsExistInDB(userName, modelName)) {
 			////判断数据库的该用户名下是否已经有了同名的模型，有的话提示一下
+			messageBean.setCmd(cmd);
 			messageBean.setCode(-1);
 			messageBean.setData(messageBean);
 			messageBean.setMsg("数据库的该用户名下是否已经有了同名的模型");
 			return messageBean;
 		}else{
 			//处理部分在数据库insertModelToDB()方法里面，直接把该方法返回的messageBean作为返回参数传给DealCmd即可
-			messageBean=dbUtils.insertModelToDB(userName,modelName,modelSlopeForCreateModel,modelInterceptForCreateModel,modelBoundaryForCreateModel);
+			messageBean=dbUtils.insertModelToDB(cmd,userName,modelName,modelSlopeForCreateModel,modelInterceptForCreateModel,modelBoundaryForCreateModel);
 		}
 		
 		
