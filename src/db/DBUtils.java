@@ -17,6 +17,9 @@ public class DBUtils {
 	//private String url = "jdbc:mysql://127.0.0.1:3306/androidtestlogin?serverTimezone=UTC"; // 指定连接数据库的URL
 	//为了解决中文存储到mysql中出现乱码的问题，在后面设置字符编码为utf-8
 	private String url = "jdbc:mysql://127.0.0.1:3306/androidtestlogin?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8"; // 指定连接数据库的URL
+	//private String user = "root"; // 指定连接数据库的用户名,这里数据库的用户名和密码根据实际情况进行更改
+	//在本地我的用户名是root
+	//但是部署到服务器上时，服务器禁止用root作为用户名，我只好将用户名改成andaolong，部署之前要检查一下这里
 	private String user = "andaolong"; // 指定连接数据库的用户名,这里数据库的用户名和密码根据实际情况进行更改
 	private String password = "260918mine"; // 指定连接数据库的密码
 	private Statement sta;
@@ -297,7 +300,7 @@ public class DBUtils {
 	public MessageBean getUserModel(int cmd , String userName) {
 		MessageBean messageBean = new MessageBean();
 		int modelCount=0;
-		String allModelName="::::";
+		String allModelName="\n";
 		
 		try {
 			sta = conn.createStatement();// 执行SQL查询语句
@@ -305,8 +308,8 @@ public class DBUtils {
 			if (rs != null) {
 				while (rs.next()) { // 遍历结果集
 					modelCount=modelCount+1;
-					allModelName=allModelName+rs.getString("model_name")+"::::";
-					//以::::为分隔符将所有的model_name拼接起来
+					allModelName=allModelName+rs.getString("model_name")+"\n";
+					//以\n为分隔符将所有的model_name拼接起来
 				}
 			}
 		} catch (SQLException e) {
@@ -314,8 +317,8 @@ public class DBUtils {
 		} 
 		messageBean.setCmd(cmd);
 		messageBean.setCode(0);
-		messageBean.setMsg(userName+"名下的模型一共有"+modelCount+"个::  "
-				+ "::::::获取到的"+userName+"名下的所有模型名字如下::::::"+allModelName);
+		messageBean.setMsg(userName+"名下的模型一共有"+modelCount+"个\n"
+				+ "获取到的"+userName+"名下的所有模型名字如下:"+allModelName);
 				
 		return messageBean;
 	}
