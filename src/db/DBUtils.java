@@ -300,7 +300,7 @@ public class DBUtils {
 	public MessageBean getUserModel(int cmd , String userName) {
 		MessageBean messageBean = new MessageBean();
 		int modelCount=0;
-		String allModelName="\n";
+		String allModelName="\n\t";
 		
 		try {
 			sta = conn.createStatement();// 执行SQL查询语句
@@ -308,7 +308,7 @@ public class DBUtils {
 			if (rs != null) {
 				while (rs.next()) { // 遍历结果集
 					modelCount=modelCount+1;
-					allModelName=allModelName+rs.getString("model_name")+"\n";
+					allModelName=allModelName+modelCount+"."+rs.getString("model_name")+"\n\t";
 					//以\n为分隔符将所有的model_name拼接起来
 				}
 			}
